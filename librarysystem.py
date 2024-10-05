@@ -32,8 +32,18 @@ class LibrarySystem:
                 self.generated_ids.add(str(new_id))
                 self.save_id(new_id)
                 return new_id
+    def extract_name(self, text):
+        match = re.search(r'Name:\s*(\w+)', text)
+        if match:
+            return match.group(1)
+        return None
     def add_book(self, book):
         book.id = self.generate_unique_id()
+        content = self.load_data()
+        for line in content:
+            if book.name == self.extract_name(line):
+                print("Wrong name")
+                return
 
         self.save_data(book)
     def remove_book(self, id):
@@ -42,8 +52,21 @@ class LibrarySystem:
         for line in content:
             id_old = self.find_number(line)
             if id != id_old:
-                updated_content.append(line)
+                updated_content.append(line.strip())
         file = open('all_books.txt', 'w')
         for line in updated_content:
+            file.write(line + "\n")
+        file.close()
+        #Deleting from ids
+        file = open('ids.txt', 'r')
+        content_ids = file.readlines()
+        file.close()
+        updated_content_ids = []
+        for line in content_ids:
+            id_old = self.find_number(line)
+            if id != id_old:
+                updated_content_ids.append(line.strip())
+        file = open('ids.txt', 'w')
+        for line in updated_content_ids:
             file.write(line + "\n")
         file.close()
