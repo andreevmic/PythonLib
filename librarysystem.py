@@ -1,6 +1,7 @@
 from book import Book
 import re
 import random
+from files import File
 
 class LibrarySystem:
     def __init__(self):
@@ -70,3 +71,67 @@ class LibrarySystem:
         for line in updated_content_ids:
             file.write(line + "\n")
         file.close()
+
+    def find_book(self, book_id):
+        content = File.read_content("all_books.txt")
+        for line in content:
+            print(line)
+            #Спросить надасуге поч функция не подходит для поиска
+            #id = File.find(line, "ID: ")
+            match = match = re.search(r'ID: \s*([^,]+)', line)
+            if match:
+                id = match.group(1).strip()
+            #
+            if id:
+                if int(id) == book_id:
+                    book_name = File.find_till(line, "Name:", ",")
+                    book_author = File.find_till(line, "Author:", ",")
+                    book_genre = File.find_till(line, "Genre:", ",")
+                    book_year = File.find_till(line, "Year:", ",")
+                    book_copies = File.find(line, "Copies:")
+                    if isinstance(book_copies, list):
+                        book_copies = book_copies[0]
+                    book = Book(book_name, book_author, book_genre, book_year, int(book_copies))
+                    book.id = book_id
+                    return book
+
+    def add_book_to_user(self, book, user):
+        content = File.read_content(f"users/{user.login}.txt")
+        new_line = ""
+        for line in content:
+            old_books = File.find(line, "B")
+            if old_books:
+                match = re.search(r'Books:\s*(.+)', line)
+                is_empty = match is not None
+                if is_empty:
+                    new_line = line.strip() + f"{book.name}"
+                else:
+                    new_line = line.strip() + f", {book.name}"
+        if new_line:
+            File.rewrite_content(f"users/{user.login}.txt", new_line, 0)
+
+    def find_book_pos(self, book_id):
+        content = File.read_content("all_books.txt")
+        count = 0
+        for line in content:
+            match = match = re.search(r'ID: \s*([^,]+)', line)
+            if match:
+                id = match.group(1).strip()
+            if int(id) == book_id:
+                return count
+            count += 1
+
+    def decrement_book_copies(self, book):
+        book.copies = int(book.copies) - 1
+        position = self.find_book_pos(book.id)
+        File.rewrite_content(f"all_books.txt", str(book), position)
+
+    def take_book(self, book_id, user):
+        book = self.find_book(book_id)
+        if book.copies == 0:
+            print("Этой книги нет в наличии")
+        else:
+            print("Книга взята")
+            self.add_book_to_user(book, user)
+            self.decrement_book_copies(book)
+
