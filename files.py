@@ -4,6 +4,7 @@ import random
 class File:
     @staticmethod
     def read_content(filename):
+        content = []
         with open(filename, 'r') as file:
             content = file.readlines()
         return content
@@ -12,6 +13,29 @@ class File:
     def write_content(filename, line):
         with open(filename, 'a') as file:
             file.write(line + "\n")
+
+    @staticmethod
+    def delete_line(filename, line):
+        content = File.read_content(filename)
+        new_content = []
+        for old_line in content:
+            if old_line.strip() != line.strip():
+                new_content.append(old_line.strip())
+        with open(filename, 'w') as file:
+            for new_line in new_content:
+                file.write(new_line + '\n')
+
+    @staticmethod
+    def log(line):
+        with open("log.txt", 'a') as file:
+            file.write(line + "\n")
+
+    @staticmethod
+    def get_log():
+        with open("log.txt", 'r') as file:
+            content = file.readlines()
+            for line in content:
+                print(line.strip())
 
     @staticmethod
     def rewrite_content(filename, line, num_of_line):
