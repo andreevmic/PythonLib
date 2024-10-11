@@ -1,57 +1,57 @@
-# Интерактивная система управления библиотекой
+# Interactive Library Management System
 
-## Описание
+## Description
 
-Данный проект представляет собой систему для управления библиотекой, которая позволяет пользователям (библиотекарям и читателям) выполнять основные операции: добавлять книги, удалять их, регистрировать читателей, отслеживать выданные книги, вести учёт возвратов и штрафов. Все данные хранятся в файлах, а пользователи взаимодействуют с программой через консольный интерфейс.
+This project is an interactive library management system that allows users (librarians and readers) to perform essential operations: adding books, deleting them, registering readers, tracking borrowed books, managing returns, and handling fines. All data is stored in files, and users interact with the program through a console interface.
 
-## Функционал системы
+## System Functionality
 
-### Регистрация книг
-- Каждая книга имеет уникальный ID, название, автора, жанр, год выпуска и количество копий.
-- Администраторы могут добавлять книги, удалять их или изменять информацию о книгах.
+### Book Registration
+- Each book has a unique ID, title, author, genre, year of publication, and number of copies.
+- Administrators can add books, remove them, or modify book information.
 
-### Регистрация читателей
-- Регистрация новых пользователей с указанием имени, номера телефона, электронной почты и уникального ID.
-- Хранение истории выданных книг и штрафов за просроченные возвраты.
+### Reader Registration
+- Registration of new users with their name, phone number, email, and a unique ID.
+- Storing the history of borrowed books and fines for late returns.
 
-### Выдача книг
-- Пользователь может взять книгу, если она есть в наличии. Система хранит информацию о том, когда книга была выдана и когда должна быть возвращена.
+### Borrowing Books
+- Users can borrow a book if it is available. The system keeps track of when the book was borrowed and when it should be returned.
 
-### Возврат книг
-- При возврате книги система проверяет дату возврата и начисляет штрафы, если книга была возвращена с опозданием.
+### Returning Books
+- Upon returning a book, the system checks the return date and applies fines if the book was returned late.
 
-### Штрафы
-- Если книга возвращена с задержкой, то начисляется штраф, который пользователь должен оплатить перед получением другой книги.
+### Fines
+- If a book is returned late, a fine is imposed, which the user must pay before borrowing another book.
 
-### Поиск по базе данных
-- Возможность искать книги по названию, автору, жанру и году выпуска.
-- Возможность просматривать историю выданных книг и задолженностей по каждому пользователю.
+### Database Search
+- Ability to search for books by title, author, genre, and year of publication.
+- Ability to view the history of borrowed books and outstanding debts for each user.
 
-### Отчёты
-- Генерация отчёта о самых популярных книгах.
-- Вывод списка пользователей, у которых есть штрафы или невозвращённые книги.
+### Reports
+- Generation of a report on the most popular books.
+- Displaying a list of users with outstanding fines or unreturned books.
 
-## Основные задачи
+## Main Tasks
 
-### Работа с файлами
-- Для хранения информации о книгах, читателях и операциях используется файлы (JSON, CSV или текстовые файлы).
-- Каждая операция добавления, удаления или изменения обновляет соответствующий файл.
+### File Handling
+- Information about books, readers, and operations is stored in files (JSON, CSV, or text files).
+- Each operation of adding, deleting, or modifying updates the corresponding file.
 
-### Работа с функциями
-- Все операции системы (регистрация книг, выдача, поиск, отчёты) организованы в функции для улучшения структуры кода.
+### Function Management
+- All system operations (book registration, borrowing, searching, reports) are organized into functions to improve code structure.
 
-### ООП (Объектно-ориентированное программирование)
-- Созданы классы для книг, пользователей и системы управления библиотекой:
-  - **Класс Book** с методами для добавления и удаления книг.
-  - **Класс User** для регистрации и управления информацией о читателе.
-  - **Класс LibrarySystem**, который объединяет все функции и взаимодействует с книгами и пользователями.
+### OOP (Object-Oriented Programming)
+- Classes have been created for books, users, and the library management system:
+  - **Book Class** with methods for adding and removing books.
+  - **User Class** for registering and managing reader information.
+  - **LibrarySystem Class**, which combines all functions and interacts with books and users.
 
-### Работа с исключениями
-- Обрабатываются возможные ошибки: недопустимый ввод данных, попытки взять книгу, если её нет в наличии, ошибки при чтении/записи файлов и т.д.
+### Exception Handling
+- Possible errors are handled: invalid input data, attempts to borrow a book that is not available, errors in reading/writing files, etc.
 
-### Меню (ввод-вывод данных)
-- Создано консольное меню, через которое пользователи могут взаимодействовать с программой, предлагающее выбор: добавить книгу, выдать книгу, найти книгу и т.д.
+### Menu (Input/Output)
+- A console menu has been created through which users can interact with the program, offering choices: add a book, borrow a book, find a book, etc.
 
-### Алгоритмы и структуры данных
-- Используются списки для хранения книг и читателей во время выполнения программы.
-- Словари и множества помогают организовать данные о штрафах и учёте книг.
+### Algorithms and Data Structures
+- Lists are used to store books and readers during the program's execution.
+- Dictionaries and sets help organize data on fines and book accounting.
