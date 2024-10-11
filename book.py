@@ -7,7 +7,7 @@ class Book:
         self.genre = genre
         self.year = year
         self.copies = copies
-    #getr setr
+        
     def get_id(self):
         return self.id
     def set_id(self, new_id):
@@ -32,7 +32,7 @@ class Book:
         return self.copies
     def set_copies(self, new_copies):
         self.copies = new_copies
-    #info
+
     def get_info(self):
         return (f"ID: {self.get_id()}, Name: {self.get_name()}, "
                 f"Author: {self.get_author()}, Genre: {self.get_genre()}, "

@@ -1,7 +1,6 @@
-from files import File
 import os
-import re
-from librarysystem import LibrarySystem
+from files import File
+from utilities import Utilities
 
 class User:
     def __init__(self, login = "", password = ""):
@@ -18,6 +17,12 @@ class User:
     def load_info(self):
         self.rented_books = self.load_rented_books()
         self.fines = self.load_fines()
+        self.ids = self.load_ids()
+        self.logins = self.load_logins()
+        self.passwords = self.load_passwords()
+
+    def print_info(self):
+        print(self.get_info().strip())
 
     def get_info(self):
         return (f"ID: {self.id}, "
@@ -25,45 +30,49 @@ class User:
                 f"Password: {self.password}")
     
     def get_books_info(self):
-        if not self.login:
-            print("Ошибка: Логин не установлен")
-            return []
-        content = File.read_content(f"users/{self.login}_books.txt")
-        return content
+        print("Взятые книги:")
+        if self.rented_books:
+            for book in self.rented_books:
+                print(book.strip())
+        else:
+            print("Нет")
+        print("Штрафы:")
+        if self.fines:
+            for fine in self.fines:
+                print(fine.strip())
+        else:
+            print("Нет")
     
     @staticmethod
     def get_all_users_info():
-        with open("users.txt", 'r') as file1:
-            content = file1.readlines()
-            for line in content:
-                match = File.find(line, "Login: ")
-                print(f"Login: {match}")
-                with open(f"users/{match}_books.txt", 'r') as file2:
-                    print("Rented books: ")
-                    book_lines = file2.readlines()
-                    if not book_lines:
-                        print("Нет")
-                    else:
-                        for book_line in book_lines:
-                            print(book_line.strip())
-                with open(f"users/{match}_fines.txt", 'r') as file3:
-                    print("Fines: ")
-                    fine_lines = file3.readlines()
-                    if not fine_lines:
-                        print("Нет")
-                    else:
-                        for fine_line in fine_lines:
-                            print(fine_line.strip())
+        content = File.read_content("users.txt")
+        for line in content:
+            match = Utilities.find(line, "Login: ")
+            print(f"Login: {match}")
+            print("Rented books: ")
+            book_lines = File.read_content(f"users/{match}_books.txt")
+            if not book_lines:
+                print("Нет")
+            else:
+                for book_line in book_lines:
+                    print(book_line.strip())
+            print("Fines: ")
+            fine_lines = File.read_content(f"users/{match}_fines.txt")
+            if not fine_lines:
+                print("Нет")
+            else:
+                for fine_line in fine_lines:
+                    print(fine_line.strip())
             print("")
             
     def __str__(self):
         return self.get_info()
 
     def load_ids(self):
-        content = File.read_content("users.txt")
+        content = File.read_content("user_ids.txt")
         ids = []
         for line in content:
-            id = File.find(line, "ID:")
+            id = Utilities.find(line, "ID:")
             if id:
                 ids.append(id)
         return ids
@@ -72,7 +81,7 @@ class User:
         content = File.read_content("users.txt")
         logins = []
         for line in content:
-            login = File.find(line, "Login:")
+            login = Utilities.find(line, "Login:")
             if login: 
                 logins.append(login)
         return logins
@@ -81,7 +90,7 @@ class User:
         content = File.read_content("users.txt")
         passwords = []
         for line in content:
-            password = File.find(line, "Password:")
+            password = Utilities.find(line, "Password:")
             if password:
                 passwords.append(password)
         return passwords
@@ -98,7 +107,7 @@ class User:
         self.login = login
         self.password = password
         user = User(login, password)
-        user.id = File.generate_unique_id(self.ids)
+        user.id = Utilities.generate_unique_id(self.ids, "user_ids.txt")
         File.write_content("users.txt", str(user))
 
     def check_is_adm(self):
@@ -109,31 +118,55 @@ class User:
                 print(f"Здравствуй, {self.login}!")
 
     def log_in(self):
-        login = input("Введите ваш логин: ")
-        password = input("Введите пароль: ")
-        if login in self.logins:
-            if password in self.passwords:
-                self.login = login
-                print("Вы успешно зашли")
-                self.check_is_adm()
-            else:
-                print("Неверный пароль")
-        else:
-            print("Неверный логин")
-
+        while True:
+                try:
+                    login = input("Введите ваш логин(Отмена: 1): ")
+                    if login == "1":
+                        return False
+                    if login in self.logins:
+                        password = input("Введите пароль(Отмена: 1): ")
+                        if password == "1":
+                            return False
+                        if password == self.passwords[self.logins.index(login)]:
+                            self.login = login
+                            self.password = password
+                            print("Вы успешно зашли")
+                            self.check_is_adm()
+                            self.load_info()
+                            return True
+                        else:
+                            print("Неверный пароль")
+                    else:
+                        print("Неверный логин")
+                except ValueError:
+                    print("Ошибка ввода.")
 
     def registration(self):
-        login = input("Придумайте логин: ")
-        if login in self.logins:
-            print("Логин занят")
-            self.login = ""
-        else: 
-            password = input("Придумайте пароль: ")
-            self.add_user(login, password)
-            with open(f"users/{login}_books.txt",'w') as file:
-                pass
-            with open(f"users/{login}_fines.txt",'w') as file:
-                pass
+        while True:
+                try:
+                    login = input("Придумайте логин(Отмена: 1): ")
+                    if login == "1":
+                        return False
+                    if login in self.logins:
+                        print("Логин занят")
+                    if len(login) < 4:
+                        print("Придумайте логин по длинее(от 4 знаков)1")
+                    else: 
+                        password = input("Придумайте пароль(Отмена: 1): ")
+                        if password == "1":
+                            return False
+                        if len(password) < 4:
+                            print("Придумайте пароль по длинее(от 4 знаков)1")
+                        self.add_user(login, password)
+                        with open(f"users/{login}_books.txt",'w') as file:
+                            pass
+                        with open(f"users/{login}_fines.txt",'w') as file:
+                            pass
+                        print("Вы успешно зарегестрировались!")
+                        self.load_info()
+                        return True
+                except ValueError:
+                    print("Ошибка ввода.")
 
     @staticmethod
     def show_users():
@@ -145,22 +178,19 @@ class User:
     def find_user(user_id):
         content = File.read_content("users.txt")
         for line in content:
-            #Спросить надасуге поч функция не подходит для поиска
-            #id = File.find(line, "ID: ")
-            match = match = re.search(r'ID: \s*([^,]+)', line)
-            if match:
-                id = match.group(1).strip()
-            #
+            id = Utilities.find(line, "ID: ").strip()
             if id:
                 if int(id) == user_id:
-                    user_login = File.find_till(line, "Login:", ",")
-                    user_password = File.find(line, "Password:")
+                    user_login = Utilities.find_till(line, "Login:", ",")
+                    user_password = Utilities.find(line, "Password:")
                     user = User(user_login, user_password)
                     user.id = user_id
                     return user
 
+    @staticmethod
     def delete_user(user_id):
         user = User.find_user(user_id)
         File.delete_line("users.txt", str(user))
         os.remove(f"users/{user.login}_books.txt")
         os.remove(f"users/{user.login}_fines.txt")
+        print("Пользователь удалён!")
