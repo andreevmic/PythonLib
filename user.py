@@ -15,11 +15,16 @@ class User:
         self.admin = False
 
     def load_info(self):
-        self.rented_books = self.load_rented_books()
-        self.fines = self.load_fines()
         self.ids = self.load_ids()
         self.logins = self.load_logins()
         self.passwords = self.load_passwords()
+        self.id = self.load_id()
+        self.rented_books = self.load_rented_books()
+        self.fines = self.load_fines()
+
+    def load_id(self):
+        id = self.ids[self.logins.index(self.login)]
+        return id
 
     def print_info(self):
         print(self.get_info().strip())
@@ -29,19 +34,28 @@ class User:
                 f"Login: {self.login}, "
                 f"Password: {self.password}")
     
-    def get_books_info(self):
+    def get_books_info(self, fines):
         print("Взятые книги:")
         if self.rented_books:
             for book in self.rented_books:
                 print(book.strip())
         else:
-            print("Нет")
+            print("Нет взятых книг")
+            if fines:
+                print("Штрафы:")
+                if self.fines:
+                    for fine in self.fines:
+                        print(fine.strip())
+                else:
+                    print("Нет штрафов")
+            return False
         print("Штрафы:")
         if self.fines:
             for fine in self.fines:
                 print(fine.strip())
         else:
-            print("Нет")
+            print("Нет штрафов")
+        return True
     
     @staticmethod
     def get_all_users_info():
@@ -72,9 +86,7 @@ class User:
         content = File.read_content("user_ids.txt")
         ids = []
         for line in content:
-            id = Utilities.find(line, "ID:")
-            if id:
-                ids.append(id)
+            ids.append(line.strip())
         return ids
 
     def load_logins(self):
@@ -168,11 +180,15 @@ class User:
                 except ValueError:
                     print("Ошибка ввода.")
 
-    @staticmethod
-    def show_users():
+    def show_users(self):
         content = File.read_content("users.txt")
+        if len(content) == 1:
+            print("Других пользователей нет(")
+            return False
         for line in content:
-            print(line)
+            if Utilities.find_till(line, "ID:", ",").strip() != str(self.id):
+                print(line.strip())
+        return True
 
     @staticmethod
     def find_user(user_id):
@@ -191,6 +207,7 @@ class User:
     def delete_user(user_id):
         user = User.find_user(user_id)
         File.delete_line("users.txt", str(user))
+        File.delete_line("user_ids.txt", str(user.id))
         os.remove(f"users/{user.login}_books.txt")
         os.remove(f"users/{user.login}_fines.txt")
         print("Пользователь удалён!")

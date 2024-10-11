@@ -1,2 +1,0 @@
-ID: 974468, Login: lexa, Password: lox
-ID: 290826, Login: lil, Password: chicha

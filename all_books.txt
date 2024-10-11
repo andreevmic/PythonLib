@@ -1,2 +1,0 @@
-ID: 622089, Name: Garry Potter, Author: Serega Pirat, Genre: Prikoli, Year: 2024, Copies: 100
-ID: 946327, Name: aaa, Author: bbb, Genre: aba, Year: 2001, Copies: 15

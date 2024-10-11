@@ -1,6 +1,7 @@
 from librarysystem import LibrarySystem
 from user import User
 from utilities import Utilities
+import sys
 
 my_user = User()
 
@@ -44,34 +45,42 @@ def choose_function():
             if librarysystem.add_book():
                 print("Книга добавлена!")
         if choice == 3:
-            librarysystem.print_all_books()
-            id_to_del = Utilities.get_user_choice("Выберите id книги, которую хотите удалить(Отмена: 1): ", 100000, 999999, 1)
-            if id_to_del:
-                librarysystem.remove_book(id_to_del)
+            if librarysystem.print_all_books():
+                id_to_del = Utilities.get_user_choice("Выберите id книги, которую хотите удалить(Отмена: 1): ", 100000, 999999, 1)
+                if id_to_del:
+                    librarysystem.remove_book(id_to_del)
         if choice == 4:
             librarysystem.get_sorted_books()
         if choice == 5:
-            librarysystem.print_all_books()
-            id_to_take = Utilities.get_user_choice("Выберите id книги, которую хотите взять(Отмена: 1): ", 100000, 999999, 1)
-            if id_to_take:
-                librarysystem.take_book(id_to_take, my_user)
+            if librarysystem.print_all_books():
+                id_to_take = Utilities.get_user_choice("Выберите id книги, которую хотите взять(Отмена: 1): ", 100000, 999999, 1)
+                if id_to_take:
+                    librarysystem.take_book(id_to_take, my_user)
         if choice == 6:
-            my_user.get_books_info()
-            id_to_return = Utilities.get_user_choice("Выберите id книги, которую хотите вернуть(Отмена: 1): ", 100000, 999999, 1)
-            if id_to_return:
-                book_to_return = librarysystem.find_book(id_to_return)
-                librarysystem.return_book(book_to_return, my_user)
+            if my_user.get_books_info(False):
+                id_to_return = Utilities.get_user_choice("Выберите id книги, которую хотите вернуть(Отмена: 1): ", 100000, 999999, 1)
+                if id_to_return:
+                    book_to_return = librarysystem.find_book(id_to_return)
+                    librarysystem.return_book(book_to_return, my_user)
         if choice == 7:
             LibrarySystem.get_report()
         if choice == 8:
             my_user.print_info()
-            my_user.get_books_info()
+            my_user.get_books_info(True)
         if choice == 9:
-            User.show_users()
-            id_to_del = Utilities.get_user_choice("Выберите id пользователя, которого хотите удалить(Отмена: 1): ", 100000, 999999, 1)
-            if id_to_del:
-                User.delete_user(id_to_del)
-                my_user.load_info()
+            if my_user.show_users():
+                id_to_del = Utilities.get_user_choice("Выберите id пользователя, которого хотите удалить(Отмена: 1): ", 100000, 999999, 1)
+                if str(id_to_del) == my_user.id:
+                    print("Вы точно хотите удалить свой аккаунт?")
+                    sure = Utilities.get_user_choice("1. Да\n2. Нет\n3. Отмена\n: ", 1, 2, 3)
+                    if sure == 1:
+                        User.delete_user(id_to_del)
+                        exit()
+                    if sure == 2:
+                        choose_function()
+                if id_to_del:
+                    User.delete_user(id_to_del)
+                    my_user.load_info()
         if choice == 10:
             User.get_all_users_info()
         if choice == 11:
@@ -95,18 +104,18 @@ def choose_function():
             librarysystem.get_sorted_books()
         if choice == 3:
             my_user.print_info()
-            my_user.get_books_info()
+            my_user.get_books_info(True)
         if choice == 4:
-            librarysystem.print_all_books()
-            id_to_take = Utilities.get_user_choice("Выберите id книги, которую хотите взять(Отмена: 1): ", 100000, 999999, 1)
-            if id_to_take:
-                librarysystem.take_book(id_to_take, my_user)
+            if librarysystem.print_all_books():
+                id_to_take = Utilities.get_user_choice("Выберите id книги, которую хотите взять(Отмена: 1): ", 100000, 999999, 1)
+                if id_to_take:
+                    librarysystem.take_book(id_to_take, my_user)
         if choice == 5:
-            my_user.get_books_info()
-            id_to_return = Utilities.get_user_choice("Выберите id книги, которую хотите вернуть(Отмена: 1): ", 100000, 999999, 1)
-            if id_to_return:
-                book_to_return = librarysystem.find_book(id_to_return)
-                librarysystem.return_book(book_to_return, my_user)
+            if my_user.get_books_info(False):
+                id_to_return = Utilities.get_user_choice("Выберите id книги, которую хотите вернуть(Отмена: 1): ", 100000, 999999, 1)
+                if id_to_return:
+                    book_to_return = librarysystem.find_book(id_to_return)
+                    librarysystem.return_book(book_to_return, my_user)
         if choice == 6:
             LibrarySystem.get_report()
         if choice == 7:

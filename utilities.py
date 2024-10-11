@@ -68,5 +68,8 @@ class Utilities:
     @staticmethod
     def get_log():
         content = File.read_content("log.txt")
+        if not content:
+            print("Пока пусто")
+            return
         for line in content:
             print(line.strip())

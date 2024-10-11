@@ -9,8 +9,12 @@ class LibrarySystem:
         self.books_array = self.load_all_books()
 
     def print_all_books(self):
+        if not self.books_array:
+            print("Нет книг!")
+            return False
         for book in self.books_array:
-            print(str(book))
+            print(str(book).strip())
+        return True
 
     def load_all_books(self):
         content = File.read_content("all_books.txt")
@@ -35,13 +39,16 @@ class LibrarySystem:
         return sorted_books
     
     def get_sorted_books(self):
+        if not self.books_array:
+            print("Нет книг!")
+            return
         parametr_list = ["id", "name", "author", "genre", "year", "copies"]
         sort_parameter = input("Введите параметр, которому хотите отсортировать(id, name, author, genre, year, copies, отмена: 1): ")
         if sort_parameter == "1" or sort_parameter not in parametr_list:
             return
         sorted_books = self.sort_books(sort_parameter)
         for book in sorted_books:
-            print(str(book))
+            print(str(book).strip())
     
     def add_book(self):
         book = Book()
@@ -161,6 +168,9 @@ class LibrarySystem:
     @staticmethod
     def get_report():
         content = File.read_content("report.txt")
+        if not content:
+            print("Такой нет!")
+            return
         lines_count = {}
         for line in content:
             if line in lines_count:
