@@ -1,41 +1,36 @@
 class Book:
-    def __init__(self, name = "Standart book name", author = "Standart book author", 
-                 genre = "Standart book genre", year = 2024, copies = 0):
-        self.id = None
-        self.name = name
-        self.author = author
-        self.genre = genre
-        self.year = year
-        self.copies = copies
-        
-    def get_id(self):
-        return self.id
-    def set_id(self, new_id):
-        self.id = new_id
-    def get_name(self):
-        return self.name
-    def set_name(self, new_name):
-        self.name = new_name
-    def get_author(self):
-        return self.author
-    def set_author(self, new_author):
-        self.author = new_author
-    def get_genre(self):
-        return self.genre
-    def set_genre(self, new_genre):
-        self.genre = new_genre
-    def get_year(self):
-        return self.year
-    def set_year(self, new_year):
-        self.year = new_year
-    def get_copies(self):
-        return self.copies
-    def set_copies(self, new_copies):
-        self.copies = new_copies
+    def __init__(self, name="Standart book name", author="Standart book author", 
+                 genre="Standart book genre", year=2024, copies=0):
+        """
+        Инициализирует объект книги с заданными параметрами.
+
+        :param name: Название книги.
+        :param author: Автор книги.
+        :param genre: Жанр книги.
+        :param year: Год выпуска книги.
+        :param copies: Количество экземпляров книги.
+        """
+        self.id = None  # Уникальный идентификатор книги (будет присвоен позже)
+        self.name = name  # Название книги
+        self.author = author  # Автор книги
+        self.genre = genre  # Жанр книги
+        self.year = year  # Год выпуска книги
+        self.copies = copies  # Количество экземпляров книги
 
     def get_info(self):
-        return (f"ID: {self.get_id()}, Name: {self.get_name()}, "
-                f"Author: {self.get_author()}, Genre: {self.get_genre()}, "
-                f"Year: {self.get_year()}, Copies: {self.get_copies()}")
+        """
+        Возвращает строку с информацией о книге.
+
+        :return: Строка, содержащая информацию о книге.
+        """
+        return (f"ID: {self.id}, Name: {self.name}, "
+                f"Author: {self.author}, Genre: {self.genre}, "
+                f"Year: {self.year}, Copies: {self.copies}")
+
     def __str__(self):
-        return self.get_info()
+        """
+        Возвращает строковое представление объекта книги.
+        
+        :return: Строка с информацией о книге.
+        """
+        return self.get_info()  # Используем метод get_info для получения информации
